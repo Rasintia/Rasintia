@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main() {
+    // Nama Program
+    cout << "Program Optimasi Pemilihan Proyek Investasi\n";
+    cout << "Dengan Metode 0/1 Knapsack Problem\n\n";
+
+    // Input Nama dan NIM
+    string nama;
+    string nim;
+    cout << "Nama: ";
+    getline(cin, nama);
+    cout << "NIM: ";
+    getline(cin, nim);
+
+    cout << "\nSelamat datang " << nama << " (NIM: " << nim << ")\n\n";
+
+    // Input jumlah proyek dan anggaran maksimum
+    int n, budget;
+    cout << "Masukkan jumlah proyek: ";
+    cin >> n;
+
+    cout << "Masukkan anggaran maksimum: ";
+    cin >> budget;
+
+    vector<int> cost(n), profit(n);
+    cout << "Masukkan biaya dan keuntungan dari tiap proyek:\n";
+    for (int i = 0; i < n; i++) {
+        cout << "Proyek " << i + 1 << " (biaya dan keuntungan): ";
+        cin >> cost[i] >> profit[i];
+    }
+
+    int max_profit = 0;
+    vector<int> best_combination;
+
+    int total_combinations = pow(2, n);
+    for (int i = 0; i < total_combinations; i++) {
+        int total_cost = 0, total_profit = 0;
+        vector<int> current_combination;
+
+        // Mengecek kombinasi proyek yang dipilih
+        for (int j = 0; j < n; j++) {
+            if (i & (1 << j)) {
+                total_cost += cost[j];
+                total_profit += profit[j];
+                current_combination.push_back(j + 1);  // Proyek yang dipilih
+            }
+        }
+
+        // Menyimpan kombinasi terbaik yang valid (biaya <= anggaran)
+        if (total_cost <= budget && total_profit > max_profit) {
+            max_profit = total_profit;
+            best_combination = current_combination;
+        }
+    }
+
+    // Menampilkan hasil
+    cout << "\nKombinasi proyek terbaik: ";
+    for (int i : best_combination) {
+        cout << "Proyek " << i << " ";
+    }
+    cout << "\nTotal Biaya: " << (max_profit == 0 ? 0 : budget) << " juta\n";
+    cout << "Total Keuntungan: " << max_profit << " juta\n";
+
+    return 0;
+}
